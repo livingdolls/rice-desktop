@@ -3,11 +3,12 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import { AiFillHome } from "react-icons/ai";
+import Link from "next/link";
 
 const Navbar = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { status, data } = useSession();
-	console.log(data?.user?.image);
 	return (
 		<nav className="bg-transparent">
 			<div className="mx-auto max-w-[80%] px-2 sm:px-6 lg:px-8">
@@ -27,13 +28,13 @@ const Navbar = () => {
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke-width="1.5"
+								strokeWidth="1.5"
 								stroke="currentColor"
 								aria-hidden="true"
 							>
 								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									strokeLinecap="round"
+									strokeLinejoin="round"
 									d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
 								/>
 							</svg>
@@ -44,13 +45,13 @@ const Navbar = () => {
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
-								stroke-width="1.5"
+								strokeWidth="1.5"
 								stroke="currentColor"
 								aria-hidden="true"
 							>
 								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
+									strokeLinecap="round"
+									strokeLinejoin="round"
 									d="M6 18L18 6M6 6l12 12"
 								/>
 							</svg>
@@ -142,6 +143,12 @@ const Navbar = () => {
 									</div>
 								</>
 							)}
+						</div>
+
+						<div className="ml-2">
+							<Link href={"/"}>
+								<AiFillHome className="h-8 w-8 text-moon-500" />
+							</Link>
 						</div>
 					</div>
 				</div>
