@@ -1,6 +1,8 @@
 import { FiUpload } from "react-icons/fi";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import React, { useRef, useState } from "react";
+import server from "../../config/axios";
+import axios from "axios";
 
 const AddAlbum = () => {
 	const [image, setImage] = useState({
@@ -13,10 +15,10 @@ const AddAlbum = () => {
 	const [form, setForm] = useState({
 		title: "",
 		detail: "",
-		gambar1: {},
-		gambar2: {},
-		gambar3: {},
-		gambar4: {},
+		gambar1: null,
+		gambar2: null,
+		gambar3: null,
+		gambar4: null,
 	});
 
 	const imageHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,17 +41,22 @@ const AddAlbum = () => {
 	const postData = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		await fetch("/api/album", {
-			method: "POST",
+		const data = await axios.post("/api/album", form, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+			onUploadProgress: (ProgressEvent) => {
+				console.log(ProgressEvent.loaded);
+			},
 		});
 	};
+
+	console.log(form);
 
 	const removeImage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		setImage({ ...image, [(e.target as HTMLDivElement).id]: "" });
 		setForm({ ...form, [(e.target as HTMLDivElement).id]: {} });
 	};
-
-	console.log(form);
 
 	const gambar1 = useRef<HTMLInputElement | null>(null);
 	const gambar2 = useRef<HTMLInputElement | null>(null);
