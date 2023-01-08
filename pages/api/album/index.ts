@@ -1,51 +1,51 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import formidable from "formidable";
 import { randomUUID } from "crypto";
 import cloudinary from "../../../config/cloudinary";
+import { PrismaClient } from "@prisma/client";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
+import nextConnect from "next-connect";
+import storage from "../../../config/Multer";
 
-export const config = {
-	api: {
-		bodyParser: false,
-	},
-};
+const prisma = new PrismaClient();
 
 const postAlbum = async (req: NextApiRequest, res: NextApiResponse) => {
-	const form = new formidable.IncomingForm({
-		multiples: false,
-		keepExtensions: true,
-		maxFileSize: 3 * 1024 * 1024,
-	});
-	form.parse(req);
+	const session = await unstable_getServerSession(req, res, authOptions);
 
-	form.on("error", async (err) => {
-		if (err.code === 1009) {
-			return res.status(413).json({ msg: "max file upload 3mb!" });
-		}
-		return res.status(422);
+	if (!session) {
+		return res.status(404).json({ msg: "Akses dilarang" });
+	}
+
+	const findUser = await prisma.user.findUnique({
+		where: {
+			id: session.user.id,
+		},
 	});
 
-	// Begin proses upload
-	form.on("fileBegin", async (formName, file) => {
-		if (file.mimetype) {
-			if (
-				file.mimetype === "image/jpg" ||
-				file.mimetype === "image/png" ||
-				file.mimetype === "image/jpeg"
-			) {
-				const ext = file.mimetype.split("/").slice(-1)[0];
-				file.newFilename = `${randomUUID()}-${Date.now()}.${ext}`;
-			} else {
-				return res.status(415).json({ msg: "file dilarang!" });
-			}
-		}
-	});
+	if (findUser === null) {
+		return res.status(404).json({ msg: "Pengguna tidak diizinkan" });
+	}
 
-	form.on("file", async (formname, file) => {
-		const respon = await cloudinary.v2.uploader.upload(file.filepath, {
-			folder: process.env.CLOUDINARY_FOLDER,
-		});
-		console.log(respon);
-	});
+	// const post = await prisma.album.create({
+	// 	data: {
+	// 		userId: findUser.id,
+	// 		asset_id: respon.asset_id,
+	// 		public_id: respon.public_id,
+	// 		version: Number(respon.version),
+	// 		version_id: respon.version_id,
+	// 		signature: respon.signature,
+	// 		width: Number(respon.width),
+	// 		height: Number(respon.height),
+	// 		format: respon.format,
+	// 		resource_type: respon.resource_type,
+	// 		bytes: Number(respon.bytes),
+	// 		etag: respon.etag,
+	// 		url: respon.url,
+	// 		secure_url: respon.secure_url,
+	// 		folder: respon.folder,
+	// 		original_filename: respon.original_filename,
+	// 	},
+	// });
 };
 
 export default postAlbum;

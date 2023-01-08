@@ -1,7 +1,6 @@
 import { FiUpload } from "react-icons/fi";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import React, { useRef, useState } from "react";
-import server from "../../config/axios";
 import axios from "axios";
 
 const AddAlbum = () => {
@@ -35,20 +34,31 @@ const AddAlbum = () => {
 			| React.ChangeEvent<HTMLInputElement>
 			| React.ChangeEvent<HTMLTextAreaElement>
 	) => {
-		setForm({ ...form, [e.target.name]: [e.target.value] });
+		setForm({ ...form, [e.target.name]: e.target.value });
 	};
 
 	const postData = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const data = await axios.post("/api/album", form, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-			onUploadProgress: (ProgressEvent) => {
-				console.log(ProgressEvent.loaded);
-			},
-		});
+		const newData = [
+			{ data: form.gambar1 },
+			{ data: form.gambar2 },
+			{ data: form.gambar3 },
+			{ data: form.gambar4 },
+		];
+
+		const data = await axios.post(
+			"/api/album/create",
+			{ image: form.gambar1 },
+			{
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				onUploadProgress: (ProgressEvent) => {
+					console.log(ProgressEvent.loaded);
+				},
+			}
+		);
 	};
 
 	console.log(form);

@@ -45,6 +45,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  album         Album[]
 }
 
 model VerificationToken {
@@ -77,3 +78,31 @@ model VerificationToken {
 //   original_filename: 'c19368e241c6b31feb6a38d19',
 //   api_key: '345592728157684'
 // }
+
+model Album {
+  id     String  @id @default(cuid())
+  userId String
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Image  Image[]
+}
+
+model Image {
+  id                String  @id @default(cuid())
+  albumId           String
+  album             Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  asset_id          String
+  public_id         String
+  version           Int
+  version_id        String
+  signature         String
+  width             Int
+  height            Int
+  format            String
+  resource_type     String?
+  bytes             Int
+  etag              String
+  url               String
+  secure_url        String
+  folder            String
+  original_filename String
+}
