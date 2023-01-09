@@ -4,12 +4,19 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { BiUpload, BiSearch } from "react-icons/bi";
 import MainModal from "../../components/Modal";
+import SpinnerPage from "../../components/SpinnerPage";
 import AddAlbum from "./AddAlbum";
 import CardImage from "./CardImage";
+import PreviewAlbum from "./PreviewAlbum";
 
 const Dashboard = () => {
 	const { data, status } = useSession();
 	const [ModalAdd, setModalAdd] = useState<boolean>(false);
+	const [watch, setWatch] = useState<boolean>(false);
+
+	if (status === "loading") {
+		return <SpinnerPage />;
+	}
 
 	if (status != "authenticated") {
 		return <div>Akses tidak diizinkan</div>;
@@ -21,8 +28,8 @@ const Dashboard = () => {
 				<div className="flex items-center space-x-2">
 					<input
 						type={"text"}
-						placeholder="title"
-						className="w-[300px] p-2 bg-gray-200 rounded-lg focus:outline-none"
+						placeholder="Title"
+						className="w-[300px] p-3 text-sm font-semibold text-gray-500 bg-gray-200 rounded-md focus:outline-none"
 					/>
 					<button className="p-2 bg-moon-500  rounded-full text-white hover:scale-105">
 						<BiSearch />
@@ -37,12 +44,12 @@ const Dashboard = () => {
 			</div>
 
 			<div className="mt-5 flex flex-wrap justify-start">
-				<CardImage />
-				<CardImage />
-				<CardImage />
-				<CardImage />
-				<CardImage />
-				<CardImage />
+				<CardImage action={() => setWatch(true)} />
+				<CardImage action={() => setWatch(true)} />
+				<CardImage action={() => setWatch(true)} />
+				<CardImage action={() => setWatch(true)} />
+				<CardImage action={() => setWatch(true)} />
+				<CardImage action={() => setWatch(true)} />
 			</div>
 
 			{ModalAdd ? (
@@ -53,6 +60,8 @@ const Dashboard = () => {
 					<AddAlbum />
 				</MainModal>
 			) : null}
+
+			{watch ? <PreviewAlbum action={() => setWatch(false)} /> : null}
 		</div>
 	);
 };

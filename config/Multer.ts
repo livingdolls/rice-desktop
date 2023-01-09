@@ -2,7 +2,7 @@ import multer from "multer";
 
 const upload = multer({
 	storage: multer.diskStorage({
-		destination: "./public/",
+		// destination: "./public/",
 		filename: (req, file, cb) => cb(null, file.originalname),
 	}),
 	fileFilter: (req, file, cb) => {
@@ -17,6 +17,7 @@ const upload = multer({
 			return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
 		}
 	},
+	// limits: { fileSize: 3024 * 3024 },
 });
 
 export default upload;

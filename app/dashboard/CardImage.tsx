@@ -1,8 +1,16 @@
 import { GrFormView } from "react-icons/gr";
 import { FcLike } from "react-icons/fc";
-const CardImage = () => {
+
+type props = {
+	action: any;
+};
+
+const CardImage = ({ action }: props) => {
 	return (
-		<div className="w-full mr-8 mb-5 max-w-[300px] bg-white rounded-lg dark:bg-gray-800 dark:border-gray-700">
+		<div
+			onClick={action}
+			className="w-full mr-8 mb-5 max-w-[300px] bg-white rounded-lg dark:bg-gray-800 dark:border-gray-700"
+		>
 			<a href="#">
 				<img
 					className="ring-4 ring-moon-500"

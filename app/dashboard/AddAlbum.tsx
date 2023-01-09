@@ -3,22 +3,36 @@ import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import React, { useRef, useState } from "react";
 import axios from "axios";
 
-const AddAlbum = () => {
-	const [image, setImage] = useState({
-		gambar1: "",
-		gambar2: "",
-		gambar3: "",
-		gambar4: "",
-	});
+const InitialImagePreview = {
+	gambar1: "",
+	gambar2: "",
+	gambar3: "",
+	gambar4: "",
+};
 
-	const [form, setForm] = useState({
-		title: "",
-		detail: "",
-		gambar1: null,
-		gambar2: null,
-		gambar3: null,
-		gambar4: null,
-	});
+type ImgPreview = typeof InitialImagePreview;
+
+const InitialForm = {
+	title: "",
+	detail: "",
+	gambar1: null,
+	gambar2: null,
+	gambar3: null,
+	gambar4: null,
+};
+
+type FormType = {
+	title: string;
+	detail: string;
+	gambar1: File | null;
+	gambar2: File | null;
+	gambar3: File | null;
+	gambar4: File | null;
+};
+
+const AddAlbum = () => {
+	const [image, setImage] = useState<ImgPreview>(InitialImagePreview);
+	const [form, setForm] = useState<FormType>(InitialForm);
 
 	const imageHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setImage({
@@ -37,28 +51,22 @@ const AddAlbum = () => {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	};
 
+	const postDataService = async (form: FormType) => {
+		await axios.post("/api/album/create", form, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+			onUploadProgress: (ProgressEvent) => {
+				console.log(ProgressEvent.loaded);
+				console.log(ProgressEvent.total);
+			},
+		});
+	};
+
 	const postData = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const newData = [
-			{ data: form.gambar1 },
-			{ data: form.gambar2 },
-			{ data: form.gambar3 },
-			{ data: form.gambar4 },
-		];
-
-		const data = await axios.post(
-			"/api/album/create",
-			{ image: form.gambar1 },
-			{
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-				onUploadProgress: (ProgressEvent) => {
-					console.log(ProgressEvent.loaded);
-				},
-			}
-		);
+		await postDataService(form);
 	};
 
 	console.log(form);
@@ -239,7 +247,7 @@ const AddAlbum = () => {
 						id="title"
 						name="title"
 						onChange={textHandleChange}
-						className="mt-2 p-3 bg-gray-100 w-full focus:outline-none rounded-lg focus:ring-2 focus:ring-moon-500"
+						className="mt-2 p-3 bg-gray-100 text-gray-600 font-medium w-full focus:outline-none rounded-lg focus:ring-2 focus:ring-moon-500"
 						placeholder="Judul Desktopmu"
 					/>
 				</div>
@@ -257,7 +265,7 @@ const AddAlbum = () => {
 						rows={4}
 						name="detail"
 						onChange={textHandleChange}
-						className="mt-2 block p-2.5 w-full text-md bg-gray-100 focus:outline-none rounded-lg focus:ring-2 focus:ring-moon-500"
+						className="mt-2 block p-2.5 w-full text-md text-gray-600 font-medium bg-gray-100 focus:outline-none rounded-lg focus:ring-2 focus:ring-moon-500"
 						placeholder="Ceritakan tentang desktop yang kamu unggah"
 					/>
 				</div>
