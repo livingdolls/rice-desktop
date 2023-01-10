@@ -56,29 +56,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// {
-//   asset_id: 'ab53ca283f919e517b153eac1a85097f',
-//   public_id: 'rice-desktop/l15ru7c13yac6bpv2oug',
-//   version: 1673119188,
-//   version_id: '22797365b31ee13b041722355b0b3266',
-//   signature: 'd837820baf9f490dcd36b6c23a755d5e9a17b3d1',
-//   width: 1280,
-//   height: 720,
-//   format: 'jpg',
-//   resource_type: 'image',
-//   created_at: '2023-01-07T19:19:48Z',
-//   tags: [],
-//   bytes: 86877,
-//   type: 'upload',
-//   etag: 'dec124610b7d3d6f84cac9f4860159ab',
-//   placeholder: false,
-//   url: 'http://res.cloudinary.com/duqozzfu9/image/upload/v1673119188/rice-desktop/l15ru7c13yac6bpv2oug.jpg',
-//   secure_url: 'https://res.cloudinary.com/duqozzfu9/image/upload/v1673119188/rice-desktop/l15ru7c13yac6bpv2oug.jpg',
-//   folder: 'rice-desktop',
-//   original_filename: 'c19368e241c6b31feb6a38d19',
-//   api_key: '345592728157684'
-// }
-
 model Album {
   id     String  @id @default(cuid())
   userId String

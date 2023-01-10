@@ -28,10 +28,11 @@ interface MulterRequest extends NextApiRequest {
 	files: Record<inputImg, TFImg[]>;
 }
 
-export interface cloudFack extends UploadApiResponse {
+export interface ResponCloud extends UploadApiResponse {
 	asset_id: string;
 	version_id: string;
 	folder: string;
+	original_extension: string;
 }
 
 app.post(
@@ -84,8 +85,8 @@ app.post(
 			})
 		);
 
-		const newData: cloudFack[] = await Promise.all(
-			imageRespon.map(async (e) => {
+		const newData = await Promise.all(
+			imageRespon.map((e) => {
 				const { api_key, tags, type, etag, placeholder, ...vl } = e;
 				return vl;
 			})
@@ -99,7 +100,7 @@ app.post(
 					detail: req.body.detail,
 					Image: {
 						createMany: {
-							data: newData,
+							data: newData as ResponCloud[],
 						},
 					},
 				},

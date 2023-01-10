@@ -8,6 +8,7 @@ import SpinnerPage from "../../components/SpinnerPage";
 import AddAlbum from "./AddAlbum";
 import CardImage from "./CardImage";
 import PreviewAlbum from "./PreviewAlbum";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
 	const { data, status } = useSession();
@@ -21,6 +22,32 @@ const Dashboard = () => {
 	if (status != "authenticated") {
 		return <div>Akses tidak diizinkan</div>;
 	}
+
+	const framerVariant = {
+		hidden: {
+			x: -10,
+			opacity: 0,
+		},
+		visible: {
+			x: 0,
+			opacity: 1,
+			transition: {
+				when: "beforeChildren",
+				staggerChildren: 0.2,
+			},
+		},
+	};
+
+	const framerCard = {
+		hidden: {
+			x: -10,
+			opacity: 0,
+		},
+		visible: {
+			x: 0,
+			opacity: 1,
+		},
+	};
 
 	return (
 		<div className="p-2">
@@ -43,14 +70,32 @@ const Dashboard = () => {
 				</button>
 			</div>
 
-			<div className="mt-5 flex flex-wrap justify-start">
-				<CardImage action={() => setWatch(true)} />
-				<CardImage action={() => setWatch(true)} />
-				<CardImage action={() => setWatch(true)} />
-				<CardImage action={() => setWatch(true)} />
-				<CardImage action={() => setWatch(true)} />
-				<CardImage action={() => setWatch(true)} />
-			</div>
+			<motion.div
+				variants={framerVariant}
+				animate="visible"
+				initial="hidden"
+				className="mt-5  flex flex-wrap justify-start"
+			>
+				<motion.div variants={framerCard}>
+					<CardImage action={() => setWatch(true)} />
+				</motion.div>
+				<motion.div variants={framerCard}>
+					<CardImage action={() => setWatch(true)} />
+				</motion.div>
+
+				<motion.div variants={framerCard}>
+					<CardImage action={() => setWatch(true)} />
+				</motion.div>
+				<motion.div variants={framerCard}>
+					<CardImage action={() => setWatch(true)} />
+				</motion.div>
+				<motion.div variants={framerCard}>
+					<CardImage action={() => setWatch(true)} />
+				</motion.div>
+				<motion.div variants={framerCard}>
+					<CardImage action={() => setWatch(true)} />
+				</motion.div>
+			</motion.div>
 
 			{ModalAdd ? (
 				<MainModal
