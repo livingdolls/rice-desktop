@@ -66,23 +66,22 @@ model Album {
 }
 
 model Image {
-  id                 String   @id @default(cuid())
-  albumId            String
-  album              Album    @relation(fields: [albumId], references: [id], onDelete: Cascade)
-  asset_id           String
-  public_id          String
-  version            Int
-  version_id         String
-  signature          String
-  width              Int
-  height             Int
-  format             String
-  resource_type      String?
-  created_at         DateTime
-  bytes              Int
-  url                String
-  secure_url         String
-  folder             String
-  original_filename  String
-  original_extension String
+  id                String   @id @default(cuid())
+  albumId           String
+  album             Album    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  asset_id          String
+  public_id         String
+  version           Int
+  version_id        String
+  signature         String
+  width             Int
+  height            Int
+  format            String
+  resource_type     String?
+  created_at        DateTime
+  bytes             Int
+  url               String
+  secure_url        String
+  folder            String
+  original_filename String?
 }

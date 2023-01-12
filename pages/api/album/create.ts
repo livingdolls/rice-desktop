@@ -87,12 +87,21 @@ app.post(
 
 		const newData = await Promise.all(
 			imageRespon.map((e) => {
-				const { api_key, tags, type, etag, placeholder, ...vl } = e;
+				const {
+					api_key,
+					tags,
+					type,
+					etag,
+					placeholder,
+					original_filename,
+					...vl
+				} = e;
 				return vl;
 			})
 		);
 
 		try {
+			console.log(newData);
 			const respon = await prisma.album.create({
 				data: {
 					userId: findUser.id,
@@ -110,6 +119,7 @@ app.post(
 				.status(201)
 				.json({ msg: "berhasil membuat post album", data: respon });
 		} catch (error) {
+			console.log(error);
 			return res
 				.status(402)
 				.json({ msg: "ada kesalahan, silahkan ulangi", data: null });

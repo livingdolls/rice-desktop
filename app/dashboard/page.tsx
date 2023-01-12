@@ -9,11 +9,58 @@ import AddAlbum from "./AddAlbum";
 import CardImage from "./CardImage";
 import PreviewAlbum from "./PreviewAlbum";
 import { motion } from "framer-motion";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { Album, Image } from "@prisma/client";
+import { TAuser } from "../../pages/api/album";
+
+const framerVariant = {
+	hidden: {
+		x: -10,
+		opacity: 0,
+	},
+	visible: {
+		x: 0,
+		opacity: 1,
+		transition: {
+			when: "beforeChildren",
+			staggerChildren: 0.2,
+		},
+	},
+};
+
+const framerCard = {
+	hidden: {
+		x: -10,
+		opacity: 0,
+	},
+	visible: {
+		x: 0,
+		opacity: 1,
+	},
+};
+
+const ViewAlbum = async () => {
+	const data = await axios.get("/api/album").then((res) => res.data);
+	return data;
+};
 
 const Dashboard = () => {
 	const { data, status } = useSession();
 	const [ModalAdd, setModalAdd] = useState<boolean>(false);
 	const [watch, setWatch] = useState<boolean>(false);
+
+	const album = useQuery("album", ViewAlbum, {
+		onSuccess: () => {
+			console.log("success");
+		},
+		onSettled: () => {
+			console.log("mengambil data");
+		},
+		onError: (err) => {
+			console.log(err);
+		},
+	});
 
 	if (status === "loading") {
 		return <SpinnerPage />;
@@ -23,31 +70,9 @@ const Dashboard = () => {
 		return <div>Akses tidak diizinkan</div>;
 	}
 
-	const framerVariant = {
-		hidden: {
-			x: -10,
-			opacity: 0,
-		},
-		visible: {
-			x: 0,
-			opacity: 1,
-			transition: {
-				when: "beforeChildren",
-				staggerChildren: 0.2,
-			},
-		},
-	};
-
-	const framerCard = {
-		hidden: {
-			x: -10,
-			opacity: 0,
-		},
-		visible: {
-			x: 0,
-			opacity: 1,
-		},
-	};
+	if (album.isLoading) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<div className="p-2">
@@ -76,25 +101,14 @@ const Dashboard = () => {
 				initial="hidden"
 				className="mt-5  flex flex-wrap justify-start"
 			>
-				<motion.div variants={framerCard}>
-					<CardImage action={() => setWatch(true)} />
-				</motion.div>
-				<motion.div variants={framerCard}>
-					<CardImage action={() => setWatch(true)} />
-				</motion.div>
-
-				<motion.div variants={framerCard}>
-					<CardImage action={() => setWatch(true)} />
-				</motion.div>
-				<motion.div variants={framerCard}>
-					<CardImage action={() => setWatch(true)} />
-				</motion.div>
-				<motion.div variants={framerCard}>
-					<CardImage action={() => setWatch(true)} />
-				</motion.div>
-				<motion.div variants={framerCard}>
-					<CardImage action={() => setWatch(true)} />
-				</motion.div>
+				{album.data.data.map((e: Album & { Image: Image[] }) => {
+					console.log(e);
+					return (
+						<motion.div variants={framerCard} key={e.id}>
+							<CardImage action={() => setWatch(true)} data={e} />
+						</motion.div>
+					);
+				})}
 			</motion.div>
 
 			{ModalAdd ? (

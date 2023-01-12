@@ -2,6 +2,10 @@
 
 import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
 
 export default function RootLayout({
 	children,
@@ -16,7 +20,10 @@ export default function RootLayout({
       */}
 			<head />
 			<body>
-				<SessionProvider>{children}</SessionProvider>
+				<QueryClientProvider client={queryClient}>
+					<SessionProvider>{children}</SessionProvider>
+					<ReactQueryDevtools />
+				</QueryClientProvider>
 			</body>
 		</html>
 	);

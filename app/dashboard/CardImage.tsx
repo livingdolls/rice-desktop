@@ -1,26 +1,29 @@
 import { GrFormView } from "react-icons/gr";
 import { FcLike } from "react-icons/fc";
+import { Album, Image as TImg } from "@prisma/client";
+import Image from "next/image";
 
 type props = {
 	action: any;
+	data: Album & { Image: TImg[] };
 };
 
-const CardImage = ({ action }: props) => {
+const CardImage = ({ action, data }: props) => {
 	return (
 		<div
 			onClick={action}
-			className="w-full mr-8 mb-5 max-w-[300px] bg-white rounded-lg dark:bg-gray-800 dark:border-gray-700"
+			className="mr-8 mb-5 w-[300px] h-[220px]  rounded-lg dark:bg-gray-800 dark:border-gray-700"
 		>
-			<a href="#">
-				<img
-					className="ring-4 ring-moon-500"
-					src="https://picsum.photos/seed/picsum/350/200"
-					alt="product image"
+			<div className="relative w-full h-[80%]">
+				<Image
+					src={data.Image[0].secure_url}
+					alt={data.title}
+					fill={true}
 				/>
-			</a>
+			</div>
 			<div className=" p-2 flex justify-between items-center">
 				<p className="text-md font-semibold text-gray-700">
-					Bulan Sabit
+					{data.title}
 				</p>
 				<div className="flex items-center">
 					{" "}
