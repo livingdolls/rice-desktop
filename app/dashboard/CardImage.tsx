@@ -12,13 +12,16 @@ const CardImage = ({ action, data }: props) => {
 	return (
 		<div
 			onClick={action}
-			className="mr-8 mb-5 w-[300px] h-[220px]  rounded-lg dark:bg-gray-800 dark:border-gray-700"
+			className="mr-8 mb-5 w-[300px] h-[220px] pb-3 rounded-lg dark:bg-gray-800 dark:border-gray-700"
 		>
 			<div className="relative w-full h-[80%]">
 				<Image
 					src={data.Image[0].secure_url}
 					alt={data.title}
 					fill={true}
+					priority
+					quality={1}
+					sizes="(max-width: 100%), (max-height:100%)"
 				/>
 			</div>
 			<div className=" p-2 flex justify-between items-center">

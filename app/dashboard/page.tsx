@@ -13,14 +13,13 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { Album, Image } from "@prisma/client";
 import { TAuser } from "../../pages/api/album";
+import { SkeletonCard } from "../../components/SkeletonCard";
 
-const framerVariant = {
+const framerMain = {
 	hidden: {
-		x: -10,
 		opacity: 0,
 	},
 	visible: {
-		x: 0,
 		opacity: 1,
 		transition: {
 			when: "beforeChildren",
@@ -50,17 +49,7 @@ const Dashboard = () => {
 	const [ModalAdd, setModalAdd] = useState<boolean>(false);
 	const [watch, setWatch] = useState<boolean>(false);
 
-	const album = useQuery("album", ViewAlbum, {
-		onSuccess: () => {
-			console.log("success");
-		},
-		onSettled: () => {
-			console.log("mengambil data");
-		},
-		onError: (err) => {
-			console.log(err);
-		},
-	});
+	const album = useQuery("album", ViewAlbum);
 
 	if (status === "loading") {
 		return <SpinnerPage />;
@@ -71,7 +60,7 @@ const Dashboard = () => {
 	}
 
 	if (album.isLoading) {
-		return <div>Loading...</div>;
+		return <SkeletonCard />;
 	}
 
 	return (
@@ -96,13 +85,12 @@ const Dashboard = () => {
 			</div>
 
 			<motion.div
-				variants={framerVariant}
+				variants={framerMain}
 				animate="visible"
 				initial="hidden"
 				className="mt-5  flex flex-wrap justify-start"
 			>
 				{album.data.data.map((e: Album & { Image: Image[] }) => {
-					console.log(e);
 					return (
 						<motion.div variants={framerCard} key={e.id}>
 							<CardImage action={() => setWatch(true)} data={e} />
