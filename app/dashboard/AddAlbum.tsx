@@ -69,8 +69,6 @@ const AddAlbum = () => {
 		await postDataService(form);
 	};
 
-	console.log(form);
-
 	const removeImage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		setImage({ ...image, [(e.target as HTMLDivElement).id]: "" });
 		setForm({ ...form, [(e.target as HTMLDivElement).id]: {} });

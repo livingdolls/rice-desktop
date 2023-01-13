@@ -8,12 +8,16 @@ import SpinnerPage from "../../components/SpinnerPage";
 import AddAlbum from "./AddAlbum";
 import CardImage from "./CardImage";
 import PreviewAlbum from "./PreviewAlbum";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Album, Image } from "@prisma/client";
-import { TAuser } from "../../pages/api/album";
 import { SkeletonCard } from "../../components/SkeletonCard";
+
+export type TPreview = {
+	openPrev: boolean;
+	data: Album & { Image: Image[] };
+};
 
 const framerMain = {
 	hidden: {
@@ -48,6 +52,16 @@ const Dashboard = () => {
 	const { data, status } = useSession();
 	const [ModalAdd, setModalAdd] = useState<boolean>(false);
 	const [watch, setWatch] = useState<boolean>(false);
+	const [preview, setPreview] = useState<TPreview>({
+		openPrev: false,
+		data: {
+			detail: "",
+			id: "",
+			title: "",
+			userId: "",
+			Image: [],
+		},
+	});
 
 	const album = useQuery("album", ViewAlbum);
 
@@ -62,6 +76,8 @@ const Dashboard = () => {
 	if (album.isLoading) {
 		return <SkeletonCard />;
 	}
+
+	console.log(preview);
 
 	return (
 		<div className="p-2">
@@ -93,7 +109,12 @@ const Dashboard = () => {
 				{album.data.data.map((e: Album & { Image: Image[] }) => {
 					return (
 						<motion.div variants={framerCard} key={e.id}>
-							<CardImage action={() => setWatch(true)} data={e} />
+							<CardImage
+								action={() =>
+									setPreview({ openPrev: true, data: e })
+								}
+								data={e}
+							/>
 						</motion.div>
 					);
 				})}
@@ -108,7 +129,16 @@ const Dashboard = () => {
 				</MainModal>
 			) : null}
 
-			{watch ? <PreviewAlbum action={() => setWatch(false)} /> : null}
+			<AnimatePresence>
+				{preview.openPrev ? (
+					<PreviewAlbum
+						action={() =>
+							setPreview({ ...preview, openPrev: false })
+						}
+						preview={preview}
+					/>
+				) : null}
+			</AnimatePresence>
 		</div>
 	);
 };

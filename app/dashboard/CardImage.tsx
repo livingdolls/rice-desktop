@@ -29,10 +29,6 @@ const CardImage = ({ action, data }: props) => {
 					{data.title}
 				</p>
 				<div className="flex items-center">
-					{" "}
-					<button>
-						<GrFormView size={"40px"} />
-					</button>
 					<button>
 						<FcLike size={"25px"} />
 					</button>
