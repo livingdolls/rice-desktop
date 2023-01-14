@@ -34,8 +34,24 @@ const framerMain = {
 	},
 };
 
+type EditAlbum = {
+	edited: boolean;
+	data: {
+		title: string;
+		detail: string;
+	};
+};
+
 const PreviewAlbum = ({ action, preview }: props) => {
 	const [select, setSelect] = useState<TImg>();
+	const [edit, setEdit] = useState<EditAlbum>({
+		edited: false,
+		data: {
+			title: "",
+			detail: "",
+		},
+	});
+
 	return (
 		<Backdrop>
 			<motion.div
@@ -101,18 +117,41 @@ const PreviewAlbum = ({ action, preview }: props) => {
 						<p className="text-right font-semibold text-lg text-gray-700">
 							Title
 						</p>
-						<p className="text-right font-poopins font-medium text-gray-500">
-							{preview.data.title}
-						</p>
+
+						{edit.edited ? (
+							<input
+								name="title"
+								placeholder="Title Post"
+								type={"text"}
+								value={edit.data.title}
+								className="w-full p-2 focus:outline-none bg-gray-100 text-gray-600 font-medium border-2 border-gray-200 founded-md cus:border-2 focus:border-moon-500"
+							/>
+						) : (
+							<p className="text-right font-poopins font-medium text-gray-500">
+								{preview.data.title}
+							</p>
+						)}
 					</div>
 
 					<div className="mb-6">
 						<p className="text-right font-semibold text-lg text-gray-700">
 							Deskripsi
 						</p>
-						<p className="text-right font-medium text-gray-500">
-							{preview.data.detail}
-						</p>
+
+						{edit.edited ? (
+							<textarea
+								id="detail"
+								rows={4}
+								value={preview.data.detail}
+								name="detail"
+								className="block mt-2 p-2.5 w-full text-md text-gray-600 font-medium bg-gray-100 focus:outline-none rounded-lg focus:ring-2 focus:ring-moon-500"
+								placeholder="Ceritakan tentang desktop yang kamu unggah"
+							/>
+						) : (
+							<p className="text-right font-medium text-gray-500">
+								{preview.data.detail}
+							</p>
+						)}
 					</div>
 
 					<div className="mb-6 flex justify-between px-5">
@@ -174,8 +213,24 @@ const PreviewAlbum = ({ action, preview }: props) => {
 					</div>
 
 					<div className="absolute bottom-5 right-5">
+						{edit.edited ? (
+							<button className="p-2 px-3 w-[100px] bg-moon-500 mr-2 hover:bg-moon-700 rounded-sm">
+								<p className="text-white font-semibold ">
+									SIMPAN
+								</p>
+							</button>
+						) : null}
+
 						<button
-							onClick={action}
+							onClick={() =>
+								setEdit({
+									data: {
+										title: preview.data.title,
+										detail: preview.data.detail,
+									},
+									edited: !edit.edited,
+								})
+							}
 							className="p-2 mr-2 w-[100px] px-3 bg-moon-500 hover:bg-moon-700 rounded-sm"
 						>
 							<p className="text-white font-semibold ">EDIT</p>
