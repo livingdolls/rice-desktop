@@ -77,8 +77,6 @@ const Dashboard = () => {
 		return <SkeletonCard />;
 	}
 
-	console.log(preview);
-
 	return (
 		<div className="p-2">
 			<div className="p-2 flex justify-between items-center ">
